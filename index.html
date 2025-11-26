@@ -145,8 +145,8 @@
     }
     
     .qr-placeholder {
-      width: 180px;
-      height: 180px;
+      width: 220px;
+      height: 220px;
       margin: 0 auto 1.25rem;
       background: var(--bg);
       border: 2px dashed var(--border);
@@ -241,9 +241,14 @@
     @media (max-width: 768px) {
       .qr-grid {
         grid-template-columns: 1fr;
-        max-width: 320px;
+        max-width: 380px;
         margin-left: auto;
         margin-right: auto;
+      }
+      
+      .qr-placeholder {
+        width: 280px;
+        height: 280px;
       }
       
       header {
