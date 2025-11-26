@@ -60,7 +60,7 @@
       margin-bottom: 3rem;
       animation: fadeInDown 0.6s ease;
     }
-    
+          <img src="Github.svg" alt="Portfolio QR Code" style="width: 100%; height: 100%; object-fit: contain;" />
     @keyframes fadeInDown {
       from {
         opacity: 0;
@@ -291,7 +291,7 @@
 
       <div class="qr-card">
         <div class="qr-placeholder">
-          <img src="Portfolio.svg" alt="Portfolio QR Code" style="width: 100%; height: 100%; object-fit: contain;" />
+          <img src="Github.svg" alt="Portfolio QR Code" style="width: 100%; height: 100%; object-fit: contain;" />
         </div>
         <div class="qr-label">Portfolio</div>
         <div class="qr-description">View my portfolio site</div>
@@ -311,60 +311,45 @@
       © 2025 Benjamin Haddon
     </footer>
   </div>
-  <!-- QR generation: use kjua (small, generates SVG/canvas). If you prefer pre-generated files,
-       replace the placeholders' <img> src attributes with your static SVG/PNG files. -->
-  <script src="https://cdn.jsdelivr.net/npm/kjua@0.9.0/kjua.min.js"></script>
+  <!-- Use the local SVGs you provided. If an SVG is missing, fall back to api.qrserver.com. -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const profiles = [
-        { selector: '.qr-card:nth-child(1) .qr-placeholder', text: 'download_pharma.html', alt: 'Pharma CV' },
-        { selector: '.qr-card:nth-child(2) .qr-placeholder', text: 'download_consulting.html', alt: 'Consulting CV' },
-        { selector: '.qr-card:nth-child(3) .qr-placeholder', text: 'https://linkedin.com/in/benhaddon', alt: 'LinkedIn' },
-        { selector: '.qr-card:nth-child(4) .qr-placeholder', text: 'https://benwassa.github.io/Portfolio/', alt: 'Portfolio' }
+        { index: 1, url: 'download_pharma.html' },
+        { index: 2, url: 'download_consulting.html' },
+        { index: 3, url: 'https://linkedin.com/in/benhaddon' },
+        { index: 4, url: 'https://benwassa.github.io/Portfolio/' }
       ];
 
-      profiles.forEach(item => {
-        const container = document.querySelector(item.selector);
-        if (!container) return;
+      profiles.forEach(p => {
+        const card = document.querySelector('.qr-card:nth-child(' + p.index + ')');
+        if (!card) return;
 
-        try {
-          // Generate an SVG element using kjua
-          const svgEl = kjua({ render: 'svg', crisp: true, text: item.text, size: 180, fill: '#0a0a0a', back: '#ffffff' });
+        // Make the whole card clickable and keyboard-accessible using the provided URLs
+        card.style.cursor = 'pointer';
+        card.setAttribute('tabindex', '0');
+        card.addEventListener('click', () => { window.open(p.url, '_blank'); });
+        card.addEventListener('keypress', (e) => { if (e.key === 'Enter') window.open(p.url, '_blank'); });
 
-          // Clear existing content (keeps a noscript/img fallback if JS is disabled)
-          container.innerHTML = '';
-
-          if (svgEl instanceof SVGElement) {
-            // Accessibility
-            svgEl.setAttribute('role', 'img');
-            svgEl.setAttribute('aria-label', item.alt);
-            svgEl.style.width = '100%';
-            svgEl.style.height = '100%';
-            svgEl.style.objectFit = 'contain';
-            container.appendChild(svgEl);
-
-            // Also attach a data-uri (useful if you later want CSS url() backgrounds)
-            const serializer = new XMLSerializer();
-            const svgStr = serializer.serializeToString(svgEl);
-            container.dataset.svgDataUri = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgStr);
-          } else if (typeof svgEl === 'string') {
-            // Some builds may return an SVG string
-            const encoded = encodeURIComponent(svgEl);
-            container.innerHTML = '<img src="data:image/svg+xml;utf8,' + encoded + '" alt="' + item.alt + '" style="width:100%;height:100%;object-fit:contain" />';
-            container.dataset.svgDataUri = 'data:image/svg+xml;utf8,' + encoded;
-          }
-
-          // Make the whole card clickable (open in new tab). Also keyboard-accessible.
-          const card = container.closest('.qr-card');
-          if (card && item.text) {
-            card.style.cursor = 'pointer';
-            card.addEventListener('click', () => { window.open(item.text, '_blank'); });
-            card.setAttribute('tabindex', '0');
-            card.addEventListener('keypress', (e) => { if (e.key === 'Enter') window.open(item.text, '_blank'); });
-          }
-        } catch (err) {
-          // If generation fails, leave existing <img> fallback in place.
-          console.warn('QR generation failed for', item, err);
+        // If an <img> is present, attach a fallback onerror to fetch from api.qrserver.com
+        const img = card.querySelector('.qr-placeholder img');
+        if (img) {
+          img.addEventListener('error', function onErr() {
+            // only replace once
+            img.removeEventListener('error', onErr);
+            const fallback = 'https://api.qrserver.com/v1/create-qr-code/?size=800x800&data=' + encodeURIComponent(p.url);
+            img.src = fallback;
+          });
+        } else {
+          // If no image element exists, create one using the external API so the placeholder isn't empty
+          const placeholder = card.querySelector('.qr-placeholder');
+          const created = document.createElement('img');
+          created.alt = 'QR code';
+          created.style.width = '100%';
+          created.style.height = '100%';
+          created.style.objectFit = 'contain';
+          created.src = 'https://api.qrserver.com/v1/create-qr-code/?size=800x800&data=' + encodeURIComponent(p.url);
+          placeholder.appendChild(created);
         }
       });
     });

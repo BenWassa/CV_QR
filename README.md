@@ -4,10 +4,16 @@ QRs for CVs
 Below are direct links (GitHub blob and raw) to the PDFs in this repository, plus quick QR images you can scan with a phone.
 
 - **LinkedIn:** `https://www.linkedin.com/in/benhaddon/`
- - **LinkedIn:** `https://www.linkedin.com/in/benhaddon/`
  - **Portfolio:** `https://benwassa.github.io/Portfolio/`
 
 
+
+https://benwassa.github.io/CV_QR/download_pharma.html
+https://raw.githubusercontent.com/BenWassa/CV_QR/main/Benjamin_Haddon_Pharma_2025.pdf
+
+
+https://benwassa.github.io/CV_QR/download_consulting.html
+https://raw.githubusercontent.com/BenWassa/CV_QR/main/BenHaddon_Consulting_2025.pdf
 
 QR code images (externally generated) — scan to open the target URL on mobile:
 
