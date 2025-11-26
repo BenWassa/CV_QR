@@ -283,6 +283,14 @@
         <div class="qr-label">LinkedIn Profile</div>
         <div class="qr-description">Connect with me</div>
       </div>
+
+      <div class="qr-card">
+        <div class="qr-placeholder">
+          <img src="Portfolio.svg" alt="Portfolio QR Code" style="width: 100%; height: 100%; object-fit: contain;" />
+        </div>
+        <div class="qr-label">Portfolio</div>
+        <div class="qr-description">View my portfolio site</div>
+      </div>
     </div>
     
     <div class="divider"></div>
@@ -298,5 +306,63 @@
       © 2025 Benjamin Haddon | <a href="https://benwassa.github.io">benwassa.github.io</a>
     </footer>
   </div>
+  <!-- QR generation: use kjua (small, generates SVG/canvas). If you prefer pre-generated files,
+       replace the placeholders' <img> src attributes with your static SVG/PNG files. -->
+  <script src="https://cdn.jsdelivr.net/npm/kjua@0.9.0/kjua.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const profiles = [
+        { selector: '.qr-card:nth-child(1) .qr-placeholder', text: 'download_pharma.html', alt: 'Pharma CV' },
+        { selector: '.qr-card:nth-child(2) .qr-placeholder', text: 'download_consulting.html', alt: 'Consulting CV' },
+        { selector: '.qr-card:nth-child(3) .qr-placeholder', text: 'https://linkedin.com/in/benhaddon', alt: 'LinkedIn' },
+        { selector: '.qr-card:nth-child(4) .qr-placeholder', text: 'https://benwassa.github.io/Portfolio/', alt: 'Portfolio' }
+      ];
+
+      profiles.forEach(item => {
+        const container = document.querySelector(item.selector);
+        if (!container) return;
+
+        try {
+          // Generate an SVG element using kjua
+          const svgEl = kjua({ render: 'svg', crisp: true, text: item.text, size: 180, fill: '#0a0a0a', back: '#ffffff' });
+
+          // Clear existing content (keeps a noscript/img fallback if JS is disabled)
+          container.innerHTML = '';
+
+          if (svgEl instanceof SVGElement) {
+            // Accessibility
+            svgEl.setAttribute('role', 'img');
+            svgEl.setAttribute('aria-label', item.alt);
+            svgEl.style.width = '100%';
+            svgEl.style.height = '100%';
+            svgEl.style.objectFit = 'contain';
+            container.appendChild(svgEl);
+
+            // Also attach a data-uri (useful if you later want CSS url() backgrounds)
+            const serializer = new XMLSerializer();
+            const svgStr = serializer.serializeToString(svgEl);
+            container.dataset.svgDataUri = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgStr);
+          } else if (typeof svgEl === 'string') {
+            // Some builds may return an SVG string
+            const encoded = encodeURIComponent(svgEl);
+            container.innerHTML = '<img src="data:image/svg+xml;utf8,' + encoded + '" alt="' + item.alt + '" style="width:100%;height:100%;object-fit:contain" />';
+            container.dataset.svgDataUri = 'data:image/svg+xml;utf8,' + encoded;
+          }
+
+          // Make the whole card clickable (open in new tab). Also keyboard-accessible.
+          const card = container.closest('.qr-card');
+          if (card && item.text) {
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', () => { window.open(item.text, '_blank'); });
+            card.setAttribute('tabindex', '0');
+            card.addEventListener('keypress', (e) => { if (e.key === 'Enter') window.open(item.text, '_blank'); });
+          }
+        } catch (err) {
+          // If generation fails, leave existing <img> fallback in place.
+          console.warn('QR generation failed for', item, err);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
