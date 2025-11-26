@@ -115,54 +115,29 @@
       border-radius: 16px;
       padding: 2rem 1.5rem;
       text-align: center;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
       position: relative;
       overflow: hidden;
-    }
-    
-    .qr-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.05) 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .qr-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 175, 55, 0.1);
-    }
-    
-    .qr-card:hover::before {
-      opacity: 1;
     }
     
     .qr-placeholder {
       width: 220px;
       height: 220px;
       margin: 0 auto 1.25rem;
-      background: var(--bg);
-      border: 2px dashed var(--border);
+      background-color: #fff;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      border: 2px solid var(--border);
       border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      transition: all 0.3s ease;
       position: relative;
       z-index: 1;
     }
-    
-    .qr-card:hover .qr-placeholder {
-      border-color: var(--accent);
-      background: rgba(212, 175, 55, 0.05);
-    }
+
+    /* Individual QR backgrounds using CSS url() */
+    .qr-pharma    { background-image: url('PharmaCV.svg'); }
+    .qr-consulting { background-image: url('ConsultingCV.svg'); }
+    .qr-linkedin  { background-image: url('LinkedIn.svg'); }
+    .qr-portfolio { background-image: url('Github.svg'); }
     
     .qr-label {
       font-size: 1.1rem;
@@ -265,72 +240,33 @@
     
     <div class="qr-grid">
       <div class="qr-card">
-        <div class="qr-placeholder">
-          <img src="PharmaCV.svg" alt="Pharma CV QR Code" style="width: 100%; height: 100%; object-fit: contain;" />
-        </div>
+        <div class="qr-placeholder qr-pharma" role="img" aria-label="Pharma CV QR Code"></div>
         <div class="qr-label">Pharma CV</div>
         <div class="qr-description">Scan to download PDF</div>
       </div>
       
       <div class="qr-card">
-        <div class="qr-placeholder">
-          <img src="ConsultingCV.svg" alt="Consulting CV QR Code" style="width: 100%; height: 100%; object-fit: contain;" />
-        </div>
+        <div class="qr-placeholder qr-consulting" role="img" aria-label="Consulting CV QR Code"></div>
         <div class="qr-label">Consulting CV</div>
         <div class="qr-description">Scan to download PDF</div>
       </div>
       
       <div class="qr-card">
-        <div class="qr-placeholder">
-          <img src="LinkedIn.svg" alt="LinkedIn Profile QR Code" style="width: 100%; height: 100%; object-fit: contain;" />
-        </div>
+        <div class="qr-placeholder qr-linkedin" role="img" aria-label="LinkedIn Profile QR Code"></div>
         <div class="qr-label">LinkedIn Profile</div>
         <div class="qr-description">Connect with me</div>
       </div>
 
       <div class="qr-card">
-        <div class="qr-placeholder">
-          <img src="Github.svg" alt="Portfolio QR Code" style="width: 100%; height: 100%; object-fit: contain;" />
-        </div>
+        <div class="qr-placeholder qr-portfolio" role="img" aria-label="Portfolio QR Code"></div>
         <div class="qr-label">Portfolio</div>
         <div class="qr-description">View my portfolio site</div>
       </div>
-    </div>
-    
-    <div class="divider"></div>
-    
-    <div class="links">
-      <a href="https://linkedin.com/in/benhaddon" class="link-btn">
-        <span>🔗</span>
-        <span>View LinkedIn Profile</span>
-      </a>
     </div>
     
     <footer>
       © 2025 Benjamin Haddon
     </footer>
   </div>
-  <!-- Use the local SVGs only. No external QR fallbacks. -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const profiles = [
-        { index: 1, url: 'download_pharma.html' },
-        { index: 2, url: 'download_consulting.html' },
-        { index: 3, url: 'https://linkedin.com/in/benhaddon' },
-        { index: 4, url: 'https://benwassa.github.io/Portfolio/' }
-      ];
-
-      profiles.forEach(p => {
-        const card = document.querySelector('.qr-card:nth-child(' + p.index + ')');
-        if (!card) return;
-
-        // Make the whole card clickable and keyboard-accessible using the provided URLs
-        card.style.cursor = 'pointer';
-        card.setAttribute('tabindex', '0');
-        card.addEventListener('click', () => { window.open(p.url, '_blank'); });
-        card.addEventListener('keypress', (e) => { if (e.key === 'Enter') window.open(p.url, '_blank'); });
-      });
-    });
-  </script>
 </body>
 </html>
